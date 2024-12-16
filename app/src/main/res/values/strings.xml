@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">HomeAssignment2</string>
+    <string name="base_url">https://gist.githubusercontent.com/</string>
+    <string name="network_error_occurred">Network error has occurred</string>
+    <string name="no_internet">No Internet connection found</string>
+</resources>

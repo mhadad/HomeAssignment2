@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <data>
+        <variable
+            name="countryUIModel"
+            type="com.mf.homeassignment2.data.models.CountryUI_DomainModel" />
+    </data>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="5dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <TextView
+        android:id="@+id/nameRegionTV"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:id="@+id/codeTV"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/nameRegionTV"
+        android:textAlignment="viewEnd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:id="@+id/capitalTV"
+        app:layout_constraintTop_toBottomOf="@id/nameRegionTV"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
