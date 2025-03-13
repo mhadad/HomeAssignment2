@@ -64,4 +64,10 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    testImplementation(libs.truth)
+    testImplementation(libs.junit)
+    testImplementation(libs.androidx.junit)
+    implementation(libs.mockk)
+//    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.mockwebserver)
 }

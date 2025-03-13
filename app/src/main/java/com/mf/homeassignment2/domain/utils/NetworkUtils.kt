@@ -5,14 +5,14 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 
-object NetworkUtils{
-    fun isInternetAvailable(application: Application): Boolean{
+class NetworkUtils{
+    fun isInternetAvailable(context: Context): Boolean{
         var isInternetAvailable = false
-        val connectivityManager = application.applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val capabilities = connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
-        isInternetAvailable = capabilities?.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED) ?: false
+        isInternetAvailable = capabilities?.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED) == true
         if(!isInternetAvailable)
-            isInternetAvailable = capabilities?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) ?: false
+            isInternetAvailable = capabilities?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) == true
         return isInternetAvailable
     }
 }

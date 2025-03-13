@@ -1,34 +1,24 @@
 package com.mf.homeassignment2.ui.fragments
 
-import android.app.Application
-import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.coroutineScope
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
-import com.mf.homeassignment2.MainActivity
 import com.mf.homeassignment2.R
 import com.mf.homeassignment2.data.models.CountryUI_DomainModel
-import com.mf.homeassignment2.data.models.Country_Model
 import com.mf.homeassignment2.data.models.UI_States
 import com.mf.homeassignment2.databinding.CountriesListBinding
-import com.mf.homeassignment2.domain.view_models.CountriesListViewModel
+import com.mf.homeassignment2.domain.utils.NetworkUtils
+import com.mf.homeassignment2.ui.view_models.CountriesListViewModel
 import com.mf.homeassignment2.ui.adapters.CountriesRV_Adapter
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -37,7 +27,7 @@ class CountriesListFragment : Fragment(R.layout.countries_list) {
     private lateinit var _binding : CountriesListBinding
     private lateinit var _countriesListViewModel: CountriesListViewModel
     private lateinit var _countriesRV_Adapter: CountriesRV_Adapter
-    private lateinit var _countriesStateFlow : StateFlow<UI_States<List<CountryUI_DomainModel>?>>
+    private var isInternetAvailable : Boolean = false
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -46,13 +36,28 @@ class CountriesListFragment : Fragment(R.layout.countries_list) {
         _binding = CountriesListBinding.inflate(inflater, container, false)
         return _binding.root
     }
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         if(savedInstanceState == null) {
             _countriesRV_Adapter = CountriesRV_Adapter()
             _countriesListViewModel =
-                CountriesListViewModel(application = requireActivity().application as Application)
+                CountriesListViewModel(baseURL = getString(R.string.base_url))
         }
+        loadData()
+    }
+    private fun loadData(){
+        var ctxt = context?.apply {
+            isInternetAvailable = NetworkUtils().isInternetAvailable(this)
+        }
+        if(ctxt != null)
+            _countriesListViewModel.execGetCountries(isInternetAvailable = isInternetAvailable)
+        else
+            setError(getString(R.string.no_internet))
+    }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         _binding.let {
                 it.countriesRV.layoutManager = LinearLayoutManager(requireContext())
                 it.countriesRV.adapter = _countriesRV_Adapter
@@ -70,7 +75,7 @@ class CountriesListFragment : Fragment(R.layout.countries_list) {
         }
         _binding.countriesListSRL.setOnRefreshListener(object: SwipeRefreshLayout.OnRefreshListener{
             override fun onRefresh() {
-                _countriesListViewModel.execGetCountries()
+                loadData()
             }
 
         })
