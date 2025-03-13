@@ -4,13 +4,13 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.mf.homeassignment2.data.dataSources.remoteDataSource.API_Service
 import com.mf.homeassignment2.data.models.Country_Model
-import com.mf.homeassignment2.data.models.UI_States
+import com.mf.homeassignment2.data.models.DataStates
 import com.mf.homeassignment2.domain.utils.CountryDomain_UI_Mapper
-import com.mf.homeassignment2.ui.view_models.CountriesListViewModel
+import com.mf.homeassignment2.presentation.view_models.CountriesListViewModel
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.runBlocking
 import okhttp3.ExperimentalOkHttpApi
 import okhttp3.mockwebserver.MockResponse
@@ -24,6 +24,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 @OptIn(ExperimentalOkHttpApi::class)
 class CountriesListViewModelUnitTests {
+//    @get:Rule
+//    val mainDispatcherRule = MainDispatcherRule()
     private lateinit var countriesUiModelMapper: CountryDomain_UI_Mapper
     private lateinit var viewModel: CountriesListViewModel
     private lateinit var retrofitMock: MockWebServer
@@ -4052,18 +4054,22 @@ class CountriesListViewModelUnitTests {
     @Test
     fun `test loading countries with count is 249`() : Unit = runBlocking{
         viewModel.execGetCountries(true, GlobalScope.coroutineContext)
-        delay(3000)
-        val data = viewModel.countriesFlow.value
-        val isEqual = (data as UI_States.Success).data.size == expectedCountries.size
-        assertEquals(isEqual, true)
+         viewModel.countriesFlow.take(3).collect {
+            if(it is DataStates.Success) {
+                val isEqual = (it as DataStates.Success).data.size == expectedCountries.size
+                assertEquals(isEqual, true)
+            }
+        }
     }
 
     @Test
     fun `test loading countries with count is not 249 because the view model is emitting different states`() : Unit = runBlocking{
         viewModel.execGetCountries(true, GlobalScope.coroutineContext)
-        val data = viewModel.countriesFlow.value
-        val isEqual = (data as UI_States.Success).data.size == expectedCountries.size
-        assertEquals(isEqual, false)
+        viewModel.countriesFlow.take(1).collect {
+            val isEqual = (it as DataStates.Success).data.size == expectedCountries.size
+            assertEquals(isEqual, false)
+        }
+
     }
 
 

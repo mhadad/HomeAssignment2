@@ -3,7 +3,7 @@
     <data>
         <variable
             name="countryUIModel"
-            type="com.mf.homeassignment2.data.models.CountryUI_DomainModel" />
+            type="com.mf.homeassignment2.domain.models.CountryUI_DomainModel" />
     </data>
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"

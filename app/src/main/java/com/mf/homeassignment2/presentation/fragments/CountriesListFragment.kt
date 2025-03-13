@@ -1,23 +1,25 @@
-package com.mf.homeassignment2.ui.fragments
+package com.mf.homeassignment2.presentation.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.snackbar.Snackbar
 import com.mf.homeassignment2.R
-import com.mf.homeassignment2.data.models.CountryUI_DomainModel
-import com.mf.homeassignment2.data.models.UI_States
 import com.mf.homeassignment2.databinding.CountriesListBinding
+import com.mf.homeassignment2.domain.models.CountryUI_DomainModel
+import com.mf.homeassignment2.domain.models.UIStates
 import com.mf.homeassignment2.domain.utils.NetworkUtils
-import com.mf.homeassignment2.ui.view_models.CountriesListViewModel
-import com.mf.homeassignment2.ui.adapters.CountriesRV_Adapter
+import com.mf.homeassignment2.presentation.adapters.CountriesRV_Adapter
+import com.mf.homeassignment2.presentation.view_models.CountriesListViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -28,6 +30,7 @@ class CountriesListFragment : Fragment(R.layout.countries_list) {
     private lateinit var _countriesListViewModel: CountriesListViewModel
     private lateinit var _countriesRV_Adapter: CountriesRV_Adapter
     private var isInternetAvailable : Boolean = false
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -42,7 +45,7 @@ class CountriesListFragment : Fragment(R.layout.countries_list) {
         if(savedInstanceState == null) {
             _countriesRV_Adapter = CountriesRV_Adapter()
             _countriesListViewModel =
-                CountriesListViewModel(baseURL = getString(R.string.base_url))
+                CountriesListViewModel(baseURL = getString(R.string.base_url), )
         }
         loadData()
     }
@@ -63,12 +66,23 @@ class CountriesListFragment : Fragment(R.layout.countries_list) {
                 it.countriesRV.adapter = _countriesRV_Adapter
                 it.countriesRV.addItemDecoration(DividerItemDecoration(requireContext(), LinearLayoutManager.VERTICAL))
         }
-        lifecycleScope.launch{
-            _countriesListViewModel.countriesFlow.flowWithLifecycle(lifecycle).collectLatest { state ->
-                when (state) {
-                    is UI_States.Error -> setError(state.message)
-                    is UI_States.Loading -> setLoading()
-                    is UI_States.Success -> setData(state.data)
+//        lifecycleScope.launch{
+//            _countriesListViewModel.countriesFlow.flowWithLifecycle(lifecycle).collectLatest { state ->
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                _countriesListViewModel.countriesFlow.collectLatest { state ->
+                    Log.d("Data", "${state.javaClass.simpleName}")
+                    when (state) {
+                        is UIStates.Success -> {
+                            setLoading(false)
+                            setData(state.data)
+                        }
+                        is UIStates.Error -> {
+                            setLoading(false)
+                            setError(state.message)
+                        }
+                        is UIStates.Loading -> setLoading()
+                    }
                 }
             }
 //                }

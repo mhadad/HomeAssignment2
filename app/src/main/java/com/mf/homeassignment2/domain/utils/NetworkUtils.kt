@@ -1,6 +1,5 @@
 package com.mf.homeassignment2.domain.utils
 
-import android.app.Application
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities

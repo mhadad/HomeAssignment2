@@ -1,7 +1,7 @@
 package com.mf.homeassignment2.domain.utils
 
 import androidx.recyclerview.widget.DiffUtil
-import com.mf.homeassignment2.data.models.CountryUI_DomainModel
+import com.mf.homeassignment2.domain.models.CountryUI_DomainModel
 
 class DiffCallback : DiffUtil.ItemCallback<CountryUI_DomainModel>(){
     override fun areItemsTheSame(

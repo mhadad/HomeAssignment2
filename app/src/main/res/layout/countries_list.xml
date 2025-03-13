@@ -3,12 +3,12 @@
     <data>
         <variable
             name="_binding"
-            type="com.mf.homeassignment2.ui.fragments.CountriesListFragment" />
+            type="com.mf.homeassignment2.presentation.fragments.CountriesListFragment" />
     </data>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/countriesListSRL"
         android:layout_width="match_parent"
@@ -22,7 +22,8 @@
         android:id="@+id/progressBar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        android:gravity="center"
         android:visibility="gone"/>
 </FrameLayout>
 </layout>

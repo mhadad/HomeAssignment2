@@ -1,12 +1,11 @@
-package com.mf.homeassignment2.ui.adapters
+package com.mf.homeassignment2.presentation.adapters
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.mf.homeassignment2.data.models.CountryUI_DomainModel
 import com.mf.homeassignment2.databinding.CountryItemViewBinding
+import com.mf.homeassignment2.domain.models.CountryUI_DomainModel
 import com.mf.homeassignment2.domain.utils.DiffCallback
 
 class CountriesRV_Adapter() : ListAdapter<CountryUI_DomainModel, CountriesRV_Adapter.ViewHolder>(DiffCallback()) {
